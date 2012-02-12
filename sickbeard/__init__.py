@@ -231,6 +231,7 @@ NOTIFO_NOTIFY_ONDOWNLOAD = False
 NOTIFO_USERNAME = None
 NOTIFO_APISECRET = None
 NOTIFO_PREFIX = None
+NOTIFO_DESTINATION = None
 
 USE_BOXCAR = False
 BOXCAR_NOTIFY_ONSNATCH = False
@@ -377,7 +378,7 @@ def initialize(consoleLogging=True):
                 NAMING_EP_NAME, NAMING_SEP_TYPE, NAMING_USE_PERIODS, WOMBLE, \
                 NZBSRUS, NZBSRUS_UID, NZBSRUS_HASH, NAMING_QUALITY, providerList, newznabProviderList, \
                 NAMING_DATES, EXTRA_SCRIPTS, USE_TWITTER, TWITTER_USERNAME, TWITTER_PASSWORD, TWITTER_PREFIX, \
-                USE_NOTIFO, NOTIFO_USERNAME, NOTIFO_APISECRET, NOTIFO_NOTIFY_ONDOWNLOAD, NOTIFO_NOTIFY_ONSNATCH, \
+                USE_NOTIFO, NOTIFO_USERNAME, NOTIFO_APISECRET, NOTIFO_DESTINATION, NOTIFO_NOTIFY_ONDOWNLOAD, NOTIFO_NOTIFY_ONSNATCH, \
                 USE_BOXCAR, BOXCAR_USERNAME, BOXCAR_PASSWORD, BOXCAR_NOTIFY_ONDOWNLOAD, BOXCAR_NOTIFY_ONSNATCH, \
                 USE_LIBNOTIFY, LIBNOTIFY_NOTIFY_ONSNATCH, LIBNOTIFY_NOTIFY_ONDOWNLOAD, USE_NMJ, NMJ_HOST, NMJ_DATABASE, NMJ_MOUNT, USE_SYNOINDEX, \
                 USE_BANNER, USE_LISTVIEW, METADATA_XBMC, METADATA_MEDIABROWSER, METADATA_PS3, metadata_provider_dict, \
@@ -582,6 +583,7 @@ def initialize(consoleLogging=True):
         NOTIFO_NOTIFY_ONDOWNLOAD = bool(check_setting_int(CFG, 'Notifo', 'notifo_notify_ondownload', 0))
         NOTIFO_USERNAME = check_setting_str(CFG, 'Notifo', 'notifo_username', '')
         NOTIFO_APISECRET = check_setting_str(CFG, 'Notifo', 'notifo_apisecret', '')
+        NOTIFO_DESTINATION = check_setting_str(CFG, 'Notifo', 'notifo_destination', '')
 
         USE_BOXCAR = bool(check_setting_int(CFG, 'Boxcar', 'use_boxcar', 0))
         BOXCAR_NOTIFY_ONSNATCH = bool(check_setting_int(CFG, 'Boxcar', 'boxcar_notify_onsnatch', 0))
@@ -1089,6 +1091,7 @@ def save_config():
     new_config['Notifo']['notifo_notify_ondownload'] = int(NOTIFO_NOTIFY_ONDOWNLOAD)
     new_config['Notifo']['notifo_username'] = NOTIFO_USERNAME
     new_config['Notifo']['notifo_apisecret'] = NOTIFO_APISECRET
+    new_config['Notifo']['notifo_destination'] = NOTIFO_DESTINATION
 
     new_config['Boxcar'] = {}
     new_config['Boxcar']['use_boxcar'] = int(USE_BOXCAR)

@@ -32,30 +32,38 @@ API_URL = "https://%(username)s:%(secret)s@api.notifo.com/v1/send_notification"
 
 class NotifoNotifier:
 
-    def test_notify(self, username, apisecret, title="Test:"):
-        return self._sendNotifo("This is a test notification from SickBeard", title, username, apisecret)
+    def test_notify(self, username, apisecret, destination, title="Test:"):
+        return self._sendNotifo("This is a test notification from SickBeard", title, username, apisecret, destination)
 
-    def _sendNotifo(self, msg, title, username, apisecret, label="SickBeard"):
+    def _sendNotifo(self, msg, title, username, apisecret, destination, label="SickBeard"):
         msg = msg.strip()
         apiurl = API_URL % {"username": username, "secret": apisecret}
-        data = urllib.urlencode({
-            "title": title,
-            "label": label,
-            "msg": msg
-        })
-
-        try:
-            data = urllib.urlopen(apiurl, data)    
-            result = json.load(data)
-        except IOError:
-            return False
         
-        data.close()
+        destination = destination.split(',')
+        success = True
 
-        if result["status"] != "success" or result["response_message"] != "OK":
-            return False
-        else:
-            return True
+        for dest in destination:
+            data = urllib.urlencode({
+                "to": dest.strip(),
+                "title": title.encode('utf-8'),
+                "label": label.encode('utf-8'),
+                "msg": msg.encode('utf-8')
+            })
+
+            try:
+                data = urllib.urlopen(apiurl, data)    
+                result = json.load(data)
+                data.close()
+            except Exception, e:
+                logger.log(str(e), logger.ERROR)
+                logger.log("Error while sending notification to " + dest, logger.ERROR)
+                success = success or False
+                continue
+
+            if result["status"] != "success" or result["response_message"] != "OK":
+                success = success or False
+        
+        return success
 
 
     def notify_snatch(self, ep_name, title="Snatched:"):
@@ -66,7 +74,7 @@ class NotifoNotifier:
         if sickbeard.NOTIFO_NOTIFY_ONDOWNLOAD:
             self._notifyNotifo(title, ep_name)       
 
-    def _notifyNotifo(self, title, message=None, username=None, apisecret=None, force=False):
+    def _notifyNotifo(self, title, message=None, username=None, apisecret=None, destination=None, force=False):
         if not sickbeard.USE_NOTIFO and not force:
             logger.log("Notification for Notifo not enabled, skipping this notification", logger.DEBUG)
             return False
@@ -75,10 +83,12 @@ class NotifoNotifier:
             username = sickbeard.NOTIFO_USERNAME
         if not apisecret:
             apisecret = sickbeard.NOTIFO_APISECRET
+        if not destination:
+            destination = sickbeard.NOTIFO_DESTINATION
 
         logger.log(u"Sending notification for " + message, logger.DEBUG)
 
-        self._sendNotifo(message, title, username, apisecret)
+        self._sendNotifo(message, title, username, apisecret, destination)
         return True
 
 notifier = NotifoNotifier

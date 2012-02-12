@@ -53,6 +53,7 @@ notifiers = [
     growl_notifier,
     prowl_notifier,
     twitter_notifier,
+    notifo_notifier,
     nmj_notifier,
     synoindex_notifier,
     boxcar_notifier,
@@ -62,10 +63,8 @@ notifiers = [
 def notify_download(ep_name):
     for n in notifiers:
         n.notify_download(ep_name)
-    notifo_notifier.notify_download(ep_name)
 
 def notify_snatch(ep_name):
     for n in notifiers:
         n.notify_snatch(ep_name)
-    notifo_notifier.notify_snatch(ep_name)
 

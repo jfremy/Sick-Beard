@@ -1173,7 +1173,7 @@ class ConfigNotifications:
                           use_growl=None, growl_notify_onsnatch=None, growl_notify_ondownload=None, growl_host=None, growl_password=None, 
                           use_prowl=None, prowl_notify_onsnatch=None, prowl_notify_ondownload=None, prowl_api=None, prowl_priority=0, 
                           use_twitter=None, twitter_notify_onsnatch=None, twitter_notify_ondownload=None, 
-                          use_notifo=None, notifo_notify_onsnatch=None, notifo_notify_ondownload=None, notifo_username=None, notifo_apisecret=None,
+                          use_notifo=None, notifo_notify_onsnatch=None, notifo_notify_ondownload=None, notifo_username=None, notifo_apisecret=None, notifo_destination=None,
                           use_boxcar=None, boxcar_notify_onsnatch=None, boxcar_notify_ondownload=None, boxcar_username=None,
                           use_libnotify=None, libnotify_notify_onsnatch=None, libnotify_notify_ondownload=None,
                           use_nmj=None, nmj_host=None, nmj_database=None, nmj_mount=None, use_synoindex=None,
@@ -1351,6 +1351,7 @@ class ConfigNotifications:
         sickbeard.NOTIFO_NOTIFY_ONDOWNLOAD = notifo_notify_ondownload
         sickbeard.NOTIFO_USERNAME = notifo_username
         sickbeard.NOTIFO_APISECRET = notifo_apisecret
+        sickbeard.NOTIFO_DESTINATION = notifo_destination
 
         sickbeard.USE_BOXCAR = use_boxcar
         sickbeard.BOXCAR_NOTIFY_ONSNATCH = boxcar_notify_onsnatch
@@ -1917,10 +1918,10 @@ class Home:
             return "Test prowl notice failed"
 
     @cherrypy.expose
-    def testNotifo(self, username=None, apisecret=None):
+    def testNotifo(self, username=None, apisecret=None, destination=None):
         cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
 
-        result = notifiers.notifo_notifier.test_notify(username, apisecret)
+        result = notifiers.notifo_notifier.test_notify(username, apisecret, destination)
         if result:
             return "Notifo notification succeeded. Check your Notifo clients to make sure it worked"
         else:

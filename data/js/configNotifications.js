@@ -41,7 +41,8 @@ $(document).ready(function(){
         $('#testNotifo-result').html(loading);
         var notifo_username = $("#notifo_username").val();
         var notifo_apisecret = $("#notifo_apisecret").val();
-        $.get(sbRoot+"/home/testNotifo", {'username': notifo_username, 'apisecret': notifo_apisecret},
+        var notifo_destination = $("#notifo_destination").val();
+        $.get(sbRoot+"/home/testNotifo", {'username': notifo_username, 'apisecret': notifo_apisecret, 'destination': notifo_destination},
         function (data){ $('#testNotifo-result').html(data); });
     });
 
