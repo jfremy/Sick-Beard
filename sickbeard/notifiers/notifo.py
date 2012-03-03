@@ -22,6 +22,7 @@ import urllib
 import sickbeard
 
 from sickbeard import logger
+from sickbeard.exceptions import ex
 
 try:
     import lib.simplejson as json #@UnusedImport
@@ -38,16 +39,15 @@ class NotifoNotifier:
     def _sendNotifo(self, msg, title, username, apisecret, destination, label="SickBeard"):
         msg = msg.strip()
         apiurl = API_URL % {"username": username, "secret": apisecret}
-        
         destination = destination.split(',')
         success = True
 
         for dest in destination:
             data = urllib.urlencode({
                 "to": dest.strip(),
-                "title": title.encode('utf-8'),
-                "label": label.encode('utf-8'),
-                "msg": msg.encode('utf-8')
+                "title": title.encode(sickbeard.SYS_ENCODING),
+                "label": label.encode(sickbeard.SYS_ENCODING),
+                "msg": msg.encode(sickbeard.SYS_ENCODING)
             })
 
             try:
