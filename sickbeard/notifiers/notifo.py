@@ -37,7 +37,23 @@ class NotifoNotifier:
         return self._sendNotifo("This is a test notification from SickBeard", title, username, apisecret, destination)
 
     def _sendNotifo(self, msg, title, username, apisecret, destination, label="SickBeard"):
+        """
+        Sends a message to notify using the given authentication information
+        
+        msg: The string to send to notifo
+        title: The title of the message
+        username: The username to send it to
+        apisecret: The API key for the username
+        destination: destination for the message
+        label: The label to use for the message (optional)
+        
+        Returns: True if the message was delivered, False otherwise
+        """
+
+        # tidy up the message
         msg = msg.strip()
+        
+        # build up the URL and parameters
         apiurl = API_URL % {"username": username, "secret": apisecret}
         destination = destination.split(',')
         success = True
@@ -65,16 +81,38 @@ class NotifoNotifier:
         
         return success
 
-
     def notify_snatch(self, ep_name, title="Snatched:"):
+        """
+        Send a notification that an episode was snatched
+        
+        ep_name: The name of the episode that was snatched
+        title: The title of the notification (optional)
+        """
         if sickbeard.NOTIFO_NOTIFY_ONSNATCH:
             self._notifyNotifo(title, ep_name)
 
     def notify_download(self, ep_name, title="Completed:"):
+        """
+        Send a notification that an episode was downloaded
+        
+        ep_name: The name of the episode that was downloaded
+        title: The title of the notification (optional)
+        """
         if sickbeard.NOTIFO_NOTIFY_ONDOWNLOAD:
             self._notifyNotifo(title, ep_name)       
 
     def _notifyNotifo(self, title, message=None, username=None, apisecret=None, destination=None, force=False):
+        """
+        Send a notifo notification based on the SB settings.
+        
+        title: The title to send
+        message: The message to send
+        username: The username to send it to (optional, default to the username in the config)
+        apisecret: The API key to use (optional, defaults to the api key in the config)
+        force: If true then the notification will be sent even if it is disabled in the config (optional)
+        
+        Returns: True if the message succeeded, false otherwise
+        """
         if not sickbeard.USE_NOTIFO and not force:
             logger.log("Notification for Notifo not enabled, skipping this notification", logger.DEBUG)
             return False
